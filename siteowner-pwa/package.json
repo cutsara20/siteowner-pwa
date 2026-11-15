@@ -1,0 +1,14 @@
+{
+  "name": "siteowner",
+  "version": "1.0.0",
+  "description": "SiteOwner – dashboard pemilik proyek (PWA + server Node/SQLite)",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "node --test test/api.test.js && node test/e2e.js",
+    "backup": "node server/cli.js backup",
+    "reset-pins": "node server/cli.js reset-pins"
+  }
+}

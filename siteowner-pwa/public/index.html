@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#c2610c">
+<title>SiteOwner – Dashboard Pemilik Proyek</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link rel="stylesheet" href="/css/style.css">
+</head><body><div class="w">
+<h1 id="jd">SiteOwner</h1>
+<div class="sub">Dashboard pemantauan tenaga kerja, K3, biaya upah, dan jadwal proyek untuk owner. Pengembangan dari WorkerKPI Ultra – Teknik Sipil USK.</div>
+<div id="gate"></div><div id="app" style="display:none"><div class="row" style="margin-top:10px;align-items:center"><span id="who" class="sub"></span><button class="btn g" id="lo">Keluar</button></div>
+<div class="tabs"><button data-t="i" data-r="sup">Input Audit Harian</button><button data-t="y" data-r="sup">Biaya</button><button data-t="d" data-r="owner" class="on">Dashboard Owner</button><button data-t="a" data-r="owner">Persetujuan</button><button data-t="o" data-r="owner">Opname</button><button data-t="k" data-r="owner">Keuangan</button><button data-t="m" data-r="all">Material</button><button data-t="j" data-r="all">Jadwal</button><button data-t="n" data-r="owner">Analisis</button><button data-t="l" data-r="owner">Laporan WhatsApp</button><button data-t="r" data-r="owner">Riwayat</button><button data-t="p" data-r="owner">Pengaturan</button><button data-t="b" data-r="all">Bantuan</button></div>
+
+<div class="tab on" id="t-d"></div>
+
+<div class="tab" id="t-i"><div class="card"><h2>Input Audit Harian – <span id="hk"></span></h2>
+<div class="sub" style="margin-bottom:8px">Isi kondisi tiap pekerja. Kecepatan dihitung otomatis dari volume hasil dibanding target, bukan skor subjektif. Pilih kondisi tiap pekerja, perkiraan upah muncul di kanan atas tiap kartu pekerja. Sakit atau APD tidak lengkap: dilarang kerja. Untuk sakit pilih ada/tidaknya surat dokter, untuk APD pilih alasannya; besar upah mengikuti Pengaturan owner.</div>
+<div id="ft"></div><br>
+<div id="cb" class="al wa" hidden></div>
+<div class="row"><label id="tgl">Tanggal kerja<input id="tg" type="date"></label><label>Nama pengisi (wajib)<input id="by" style="width:200px"></label><label id="all" hidden>Alasan koreksi (wajib)<input id="al" style="width:260px"></label><label id="phl">Foto bukti hari ini (opsional, maksimal 3)<input id="ph" type="file" accept="image/*" multiple capture="environment"></label></div><button class="btn" id="sv">Hitung &amp; Simpan Hari Ini</button><div class="sub" id="sm" style="margin-top:8px"></div></div><div id="hs"></div></div>
+
+<div class="tab" id="t-l"><div class="card"><h2>Laporan Harian untuk Owner</h2>
+<textarea id="rp" readonly></textarea><br><br>
+<button class="btn" id="cp">Salin Laporan</button> <span class="sub" id="cm"></span></div></div>
+
+<div class="tab" id="t-a"></div>
+<div class="tab" id="t-o"></div>
+<div class="tab" id="t-k"></div>
+<div class="tab" id="t-m"></div>
+<div class="tab" id="t-j"></div>
+<div class="tab" id="t-y"></div>
+<div class="tab" id="t-n"></div>
+<div class="tab" id="t-r"></div>
+<div class="tab" id="t-b"></div>
+<div class="tab" id="t-p"><div class="card"><h2>Pengaturan Proyek</h2>
+<div class="row"><label>Nama proyek<input id="sn" style="width:220px"></label>
+<label>Sisa durasi kontrak (hari kerja)<input id="sd" type="number" min="1" max="200" style="width:110px"></label>
+<label>Progres fisik awal (%)<input id="sa" type="number" min="0" max="99" style="width:110px"></label></div>
+<div id="cf"></div>
+<div class="sub" style="margin-bottom:8px">Aturan dasar: absen tidak dibayar. Sakit atau APD tidak lengkap: dilarang bekerja (besar upah diatur di atas). Kurang sehat: boleh bekerja tanpa lembur. APD sebagian: boleh bekerja, kena potongan, tanpa bonus. Bonus butuh KPI minimal 85 dan APD lengkap. Hasil opname lapangan menjadi acuan progres.</div><div class="sub">Data tersimpan di server proyek. Rumus: progres harian = 2,5% × rasio pekerja fit × faktor KPI (0,8 / 1,0 / 1,1) + 0,05% per jam lembur.</div></div></div></div>
+</div>
+<div id="toast" hidden style="position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));background:var(--tx);color:var(--bg);padding:10px 14px;border-radius:10px;z-index:9;font-size:14px"></div>
+<script src="/js/integrity.js"></script>
+<script src="/js/config.js"></script>
+<script src="/js/logic.js"></script>
+<script src="/js/crypto.js"></script>
+<script src="/js/export.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/ui.js"></script>
+<script src="/js/pwa.js"></script>
+</body></html>
