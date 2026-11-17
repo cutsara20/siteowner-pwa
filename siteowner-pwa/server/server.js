@@ -1,5 +1,5 @@
 "use strict";
-require("node:process").loadEnvFile();
+try { require("node:process").loadEnvFile(); } catch (e) { if (e.code !== "ENOENT") throw e; }
 // SiteOwner server: berkas statis PWA + API JSON + SSE sinkronisasi. Tanpa dependensi luar (Node 22+).
 const http = require("node:http");
 const fs = require("node:fs");

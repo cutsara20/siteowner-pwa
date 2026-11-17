@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "node server/server.js",
+    "dev": "node --env-file-if-exists=.env.development.local --watch server/server.js",
     "test": "node --test test/api.test.js && node test/e2e.js",
     "backup": "node server/cli.js backup",
     "reset-pins": "node server/cli.js reset-pins"
