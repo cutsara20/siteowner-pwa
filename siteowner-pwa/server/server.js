@@ -459,16 +459,33 @@ const SEC = {
 };
 const sendJson = (res, status, obj, extra) => { res.writeHead(status, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...SEC, ...(extra || {}) }); res.end(JSON.stringify(obj)); };
 
+function cookieSecure(req) {
+    if (process.env.COOKIE_SECURE === "1") return true;
+    if (process.env.COOKIE_SECURE === "0") return false;
+    const h = req.headers;
+    if (String(h["x-forwarded-proto"] || "").split(",").some(p => p.trim() === "https")) return true;
+    if (h["x-forwarded-ssl"] === "on" || /proto=https/i.test(String(h.forwarded || ""))) return true;
+    if (req.socket.encrypted) return true;
+    // Browsers accept Secure cookies on localhost and every named host is HTTPS in practice.
+    // Only plain-HTTP access through a bare LAN IP stays non-Secure (Secure cookies would be dropped there).
+    const host = String(h["x-forwarded-host"] || h.host || "").split(",")[0].trim().replace(/:\d+$/, "");
+    if (host === "127.0.0.1" || host === "[::1]") return true;
+    return !/^[\d.]+$/.test(host) && !host.startsWith("[");
+}
+
 async function handleApi(req, res, url) {
     const m = routes && compiled.find(r => r.method === req.method && r.re.test(url.pathname));
     if (!m) return sendJson(res, 404, { error: "Tidak ditemukan." });
     const params = {}; const mm = url.pathname.match(m.re); m.names.forEach((n, i) => params[n] = decodeURIComponent(mm[i + 1]));
-    const secure = process.env.COOKIE_SECURE === "1" || req.headers["x-forwarded-proto"] === "https";
+    const secure = cookieSecure(req);
+    // SameSite=None + Partitioned keeps the session working when the app is embedded (e.g. preview iframe).
+    // CSRF stays blocked: every non-GET request must carry the custom X-SiteOwner header, which cross-origin pages cannot send.
+    const attrs = "; HttpOnly; Path=/" + (secure ? "; Secure; SameSite=None; Partitioned" : "; SameSite=Lax");
     let cookie = null;
     const ctx = {
         params, ip: req.socket.remoteAddress || "?", sess: null, body: {}, raw: null,
-        setCookie: sid => { cookie = "so_sid=" + sid + "; HttpOnly; SameSite=Strict; Path=/; Max-Age=43200" + (secure ? "; Secure" : ""); },
-        clearCookie: () => { cookie = "so_sid=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0" + (secure ? "; Secure" : ""); },
+        setCookie: sid => { cookie = "so_sid=" + sid + attrs + "; Max-Age=43200"; },
+        clearCookie: () => { cookie = "so_sid=" + attrs + "; Max-Age=0"; },
     };
     try {
         if (req.method !== "GET" && req.headers["x-siteowner"] !== "1") throw new HttpError(403, "Permintaan ditolak.");
